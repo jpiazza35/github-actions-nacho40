@@ -1,7 +1,9 @@
 name: Actions Workflow
 
 on: 
-  push:
+  schedule:
+    - cron: "33 12 * * 5"  # each friday at 12:33
+  #push:
   pull_request:
     types:
       - "closed"
