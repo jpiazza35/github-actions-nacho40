@@ -4,12 +4,22 @@ on: push
 
 jobs:
   node-version:
-    runs-on: ubuntu-latest
+  ##we define an strategy under the job called node-version
+  # it will trigger the  job node-version 3 times, one per each node_version in array
+  ## in case some of the version in the array fails , then the others will stop, since fail-fast is true
+    strategy:
+      matrix:
+      # inside the matrix you can add some arbitraty key values
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node_version: [6,8,10]
+      fail-fast: true  
+      #max-parallel: 2 this is other strategy different to failt-fast , it run job in parallel.
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Log node node version 
         run: node -v 
       - uses: actions/setup-node@v3
         with:
-          node-version: '10.x' 
+          node-version: ${{ matrix.node_version }} # i will use each node version from array above
       - name: Log node version
         run: node -v 
