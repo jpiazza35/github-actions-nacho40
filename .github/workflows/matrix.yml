@@ -1,5 +1,5 @@
 name: matrix
-on: push
+on: pull_request
 
 
 jobs:
@@ -12,9 +12,21 @@ jobs:
       # inside the matrix you can add some arbitraty key values
         os: [ubuntu-latest, windows-latest, macos-latest]
         node_version: [6,8,10]
+        include:
+        ## it will generate a new key value called is_ubuntu_8 just when run ubuntu-latest and node_version 8
+          - os: ubuntu-latest
+            node_version: 8
+            is_ubuntu_8: "true"
+        exclude:
+          - os: ubuntu-latest
+            node_version: 6
+          - os: macos-latest
+            node_version: 8
       fail-fast: true  
       #max-parallel: 2 this is other strategy different to failt-fast , it run job in parallel.
     runs-on: ${{ matrix.os }}
+    env:
+      IS_UBUNTU_8: ${{ matrix.is_ubuntu_8 }}
     steps:
       - name: Log node node version 
         run: node -v 
@@ -22,4 +34,6 @@ jobs:
         with:
           node-version: ${{ matrix.node_version }} # i will use each node version from array above
       - name: Log node version
-        run: node -v 
+        run: |
+          node -v
+          echo $IS_UBUNTU_8 
