@@ -6,9 +6,11 @@ on: [pull_request]
 jobs:
   run-shell-command:
     runs-on: ubuntu-latest
+    timeout-minutes: 360 ## max time that we set to the workflow to take , if it takes longer , then will stoip the workflow
     steps:
       - name: echo a string
         run: echo "Hello world"
+        continue-on-error: true ## it will continue the rest of the steps even if it fails.
       - name: multiline script
         run: |
           node -v
